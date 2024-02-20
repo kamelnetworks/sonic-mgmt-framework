@@ -11,7 +11,9 @@ KLISH_SRC = $(SONIC_CLI_ROOT)/klish-$(KLISH_VERSION)
 # we need to try two alternatives.
 CFLAGS_PYTHON := $(shell pkg-config --silence-errors --cflags python3-embed || pkg-config --cflags python3)
 LDFLAGS_PYTHON := $(shell pkg-config --silence-errors --libs python3-embed || pkg-config --libs python3)
-LDFLAGS_CURL := $(shell pkg-config --libs libcurl)
+# The installed libcurl's -dev package is not gnutls
+# so we have to explicitly link to the correct .so file
+LDFLAGS_CURL := "-l:libcurl-gnutls.so.4"
 
 ifeq ($(CROSS_BUILD_ENVIRON),y)
 	CROSS_CONFIGURE_OPTS = --host=$(CROSS_HOST_TYPE)
